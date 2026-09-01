@@ -7,6 +7,18 @@ const VALUES = [
   "Economía del conocimiento",
 ];
 
+// Same rotation language as RUBRO_COLOR (lib/rubros.ts) — these aren't
+// rubros, so the mapping stays local, but the visual grammar (a colored
+// accent cycling through the fixed palette) matches the rest of the site.
+const VALUE_COLORS = [
+  "var(--primary)",
+  "var(--ring)",
+  "var(--accent)",
+  "var(--chart-3)",
+  "var(--foreground)",
+  "var(--primary)",
+];
+
 export function AboutContent() {
   return (
     <div className="space-y-10">
@@ -30,12 +42,14 @@ export function AboutContent() {
         </p>
       </div>
       <div>
-        <h2 className="text-xl font-semibold tracking-tight">Valores del evento</h2>
-        <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {VALUES.map((value) => (
+        <p className="text-xs font-bold tracking-[0.14em] text-accent uppercase">Identidad</p>
+        <h2 className="mt-2 text-2xl font-extrabold tracking-tight">Valores del evento</h2>
+        <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {VALUES.map((value, i) => (
             <li
               key={value}
-              className="rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-card-foreground"
+              className="rounded-lg border-l-4 bg-card px-4 py-3 text-sm font-medium text-card-foreground shadow-sm ring-1 ring-foreground/5"
+              style={{ borderColor: VALUE_COLORS[i] }}
             >
               {value}
             </li>

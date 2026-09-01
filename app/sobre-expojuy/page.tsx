@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { AboutContent } from "@/features/about";
 
@@ -9,11 +10,11 @@ export const metadata: Metadata = {
 
 export default function SobreExpoJuyPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+    <PageContainer>
       <PageHeader eyebrow="17ª edición · CAMCOMEX" title="Sobre ExpoJuy 2026" />
-      <div className="mt-10">
+      <div className="mt-10 max-w-3xl">
         <AboutContent />
       </div>
-    </div>
+    </PageContainer>
   );
 }

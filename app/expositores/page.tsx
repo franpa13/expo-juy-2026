@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { ExhibitorsExplorer, EXHIBITORS } from "@/features/exhibitors";
 import { RUBROS } from "@/lib/rubros";
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ExpositoresPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <PageContainer>
       <PageHeader
         eyebrow={`${EXHIBITORS.length} empresas · ${RUBROS.length} rubros`}
         title="Expositores"
@@ -19,6 +20,6 @@ export default function ExpositoresPage() {
       <div className="mt-10">
         <ExhibitorsExplorer exhibitors={EXHIBITORS} />
       </div>
-    </div>
+    </PageContainer>
   );
 }

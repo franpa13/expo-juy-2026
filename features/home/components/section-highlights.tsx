@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { PageContainer } from "@/components/layout/page-container";
 
 const HIGHLIGHTS = [
   { href: "/expositores", title: "Expositores", description: "Buscá y filtrá empresas por rubro." },
@@ -12,7 +13,7 @@ const HIGHLIGHTS = [
 
 export function SectionHighlights() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <PageContainer>
       <p className="text-xs font-bold tracking-[0.14em] text-accent uppercase">Recorré el sitio</p>
       <h2 className="mt-3 text-3xl font-extrabold tracking-tight">Todo lo que necesitás saber</h2>
       <div className="mt-8 border-t border-line">
@@ -35,6 +36,6 @@ export function SectionHighlights() {
           </Link>
         ))}
       </div>
-    </section>
+    </PageContainer>
   );
 }

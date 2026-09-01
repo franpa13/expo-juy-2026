@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { ContactForm } from "@/features/contact";
 
@@ -9,15 +10,15 @@ export const metadata: Metadata = {
 
 export default function ContactoPage() {
   return (
-    <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">
+    <PageContainer>
       <PageHeader
         eyebrow="Estamos para ayudarte"
         title="Contacto"
         description="¿Querés ser expositor, sos prensa o tenés una consulta? Escribinos."
       />
-      <div className="mt-10">
+      <div className="mt-10 max-w-xl">
         <ContactForm />
       </div>
-    </div>
+    </PageContainer>
   );
 }

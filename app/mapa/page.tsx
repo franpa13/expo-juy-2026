@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { VenueMap, STANDS } from "@/features/venue-map";
 import { EXHIBITORS } from "@/features/exhibitors";
@@ -12,7 +13,7 @@ export default function MapaPage() {
   const zoneCount = new Set(STANDS.map((stand) => stand.zone)).size;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <PageContainer>
       <PageHeader
         eyebrow={`${STANDS.length} stands · ${zoneCount} zonas`}
         title="Mapa del predio"
@@ -21,6 +22,6 @@ export default function MapaPage() {
       <div className="mt-10">
         <VenueMap stands={STANDS} exhibitors={EXHIBITORS} />
       </div>
-    </div>
+    </PageContainer>
   );
 }

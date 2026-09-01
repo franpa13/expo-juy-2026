@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { SponsorTier, SPONSORS } from "@/features/sponsors";
 
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function SponsorsPage() {
   return (
-    <div className="mx-auto max-w-6xl space-y-10 px-4 py-12 sm:px-6">
+    <PageContainer className="space-y-10">
       <PageHeader
         eyebrow={`${SPONSORS.length} empresas e instituciones`}
         title="Sponsors"
@@ -18,6 +19,6 @@ export default function SponsorsPage() {
       <SponsorTier tier="platino" sponsors={SPONSORS} />
       <SponsorTier tier="oro" sponsors={SPONSORS} />
       <SponsorTier tier="plata" sponsors={SPONSORS} />
-    </div>
+    </PageContainer>
   );
 }

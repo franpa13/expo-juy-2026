@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { NewsList, NEWS } from "@/features/news";
 
@@ -9,11 +10,11 @@ export const metadata: Metadata = {
 
 export default function NoticiasPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <PageContainer>
       <PageHeader eyebrow={`${NEWS.length} novedades`} title="Noticias" />
-      <div className="mt-10">
+      <div className="mt-10 max-w-3xl">
         <NewsList items={NEWS} />
       </div>
-    </div>
+    </PageContainer>
   );
 }

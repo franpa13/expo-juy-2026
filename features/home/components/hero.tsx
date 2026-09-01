@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { PageContainer } from "@/components/layout/page-container";
 import { StrataPanel } from "@/components/layout/strata";
 import { Countdown } from "./countdown";
 
 export function Hero() {
   return (
     <section className="border-b border-border bg-background">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-16">
+      <PageContainer className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-16">
         <div>
           <p className="text-xs font-bold tracking-[0.14em] text-accent uppercase">
             9 al 12 de octubre de 2026 · Ciudad Cultural, San Salvador de Jujuy
@@ -37,7 +38,7 @@ export function Hero() {
           </div>
         </div>
         <StrataPanel className="h-40 rounded-3xl sm:h-56 lg:h-104 lg:rounded-[2.5rem]" />
-      </div>
+      </PageContainer>
     </section>
   );
 }

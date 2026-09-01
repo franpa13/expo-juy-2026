@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
 import { AgendaPlanner, AgendaSchedule, AGENDA_DAYS, SESSIONS } from "@/features/agenda";
 
@@ -11,7 +12,7 @@ export default function AgendaPage() {
   const dayCount = Object.keys(AGENDA_DAYS).length;
 
   return (
-    <div className="mx-auto max-w-6xl space-y-14 px-4 py-12 sm:px-6">
+    <PageContainer className="space-y-14">
       <PageHeader
         eyebrow={`9–12 de octubre · ${dayCount} días`}
         title="Agenda de actividades"
@@ -25,6 +26,6 @@ export default function AgendaPage() {
           <AgendaSchedule sessions={SESSIONS} />
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

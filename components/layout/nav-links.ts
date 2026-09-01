@@ -14,3 +14,9 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/faq", label: "Preguntas frecuentes" },
   { href: "/contacto", label: "Contacto" },
 ];
+
+/** Home ("/") only matches the exact path; every other link also covers its own sub-routes. */
+export function isNavLinkActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}

@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { StrataDivider } from "@/components/layout/strata";
 import { contactSchema, CONTACT_TOPICS, type ContactFormValues } from "../lib/schema";
 
 export function ContactForm() {
@@ -40,16 +41,25 @@ export function ContactForm() {
 
   if (submitted) {
     return (
-      <p className="rounded-lg border border-border bg-card p-6 text-sm text-card-foreground" role="status">
-        ¡Gracias! Recibimos tu mensaje. El equipo organizador se va a poner en
-        contacto a la brevedad.
-      </p>
+      <div
+        className="rounded-2xl border border-line bg-card p-6 text-sm text-card-foreground shadow-sm sm:p-8"
+        role="status"
+      >
+        <StrataDivider className="mb-4 h-1 max-w-16" />
+        <p>
+          ¡Gracias! Recibimos tu mensaje. El equipo organizador se va a poner en
+          contacto a la brevedad.
+        </p>
+      </div>
     );
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 rounded-2xl border border-line bg-card p-6 shadow-sm sm:p-8"
+      >
         <FormField
           control={form.control}
           name="name"

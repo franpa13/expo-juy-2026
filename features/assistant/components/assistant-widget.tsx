@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { StrataDivider } from "@/components/layout/strata";
 import { answerAssistant } from "../lib/script";
 
 interface Message {
@@ -43,8 +44,9 @@ export function AssistantWidget() {
   return (
     <div className="fixed right-4 bottom-4 z-50">
       {open ? (
-        <Card className="w-80 shadow-lg sm:w-96">
-          <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
+        <Card className="w-80 overflow-hidden py-0 shadow-lg sm:w-96">
+          <StrataDivider className="h-1 rounded-none" />
+          <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pt-4 pb-2">
             <div>
               <CardTitle className="text-base">Asistente ExpoJuy</CardTitle>
               <Badge variant="secondary" className="mt-1">
@@ -60,7 +62,7 @@ export function AssistantWidget() {
               <X className="size-4" />
             </Button>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-3 pb-4">
             <div className="max-h-64 space-y-2 overflow-y-auto" role="log" aria-live="polite">
               {messages.map((message) => (
                 <p

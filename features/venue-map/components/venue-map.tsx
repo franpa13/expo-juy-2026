@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -11,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RUBROS, RUBRO_LABELS, type Rubro } from "@/lib/rubros";
-import type { Exhibitor } from "@/features/exhibitors";
+import { filterExhibitors, type Exhibitor } from "@/features/exhibitors";
 import type { VenueStand } from "../types";
 
 const ZONE_FILL: Record<VenueStand["zone"], string> = {
@@ -38,6 +39,7 @@ export function VenueMap({
   stands: VenueStand[];
   exhibitors: Exhibitor[];
 }) {
+  const [query, setQuery] = useState("");
   const [rubro, setRubro] = useState<Rubro | "all">("all");
   const [selectedStandId, setSelectedStandId] = useState<string | null>(null);
   const [focusedStandId, setFocusedStandId] = useState<string | null>(null);
@@ -47,33 +49,49 @@ export function VenueMap({
     [exhibitors]
   );
 
+  const matchingExhibitorIds = useMemo(
+    () => new Set(filterExhibitors(exhibitors, query, rubro).map((e) => e.id)),
+    [exhibitors, query, rubro]
+  );
+
   const selectedExhibitor = selectedStandId
     ? exhibitorsById.get(stands.find((s) => s.id === selectedStandId)?.exhibitorId ?? "")
     : undefined;
 
-  const isVisible = (stand: VenueStand) => {
-    if (rubro === "all") return true;
-    return exhibitorsById.get(stand.exhibitorId)?.rubro === rubro;
-  };
+  const isVisible = (stand: VenueStand) => matchingExhibitorIds.has(stand.exhibitorId);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-4">
+        <CardHeader className="flex flex-col gap-4">
           <CardTitle>Plano del predio</CardTitle>
-          <Select value={rubro} onValueChange={(v) => setRubro(v as Rubro | "all")}>
-            <SelectTrigger className="w-56" aria-label="Filtrar stands por rubro">
-              <SelectValue placeholder="Todos los rubros" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos los rubros</SelectItem>
-              {RUBROS.map((r) => (
-                <SelectItem key={r} value={r}>
-                  {RUBRO_LABELS[r]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar expositor por nombre..."
+              aria-label="Buscar expositor"
+              className="sm:max-w-sm"
+            />
+            <Select value={rubro} onValueChange={(v) => setRubro(v as Rubro | "all")}>
+              <SelectTrigger className="sm:w-56" aria-label="Filtrar stands por rubro">
+                <SelectValue placeholder="Todos los rubros" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los rubros</SelectItem>
+                {RUBROS.map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {RUBRO_LABELS[r]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {matchingExhibitorIds.size === 0 && (
+            <p className="text-sm text-muted-foreground" role="status">
+              Ningún expositor coincide con la búsqueda.
+            </p>
+          )}
         </CardHeader>
         <CardContent>
           <svg
@@ -108,11 +126,12 @@ export function VenueMap({
                   onBlur={() =>
                     setFocusedStandId((current) => (current === stand.id ? null : current))
                   }
-                  tabIndex={0}
+                  tabIndex={visible ? 0 : -1}
                   role="button"
                   aria-label={exhibitor?.name ?? stand.id}
                   className="cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   opacity={visible ? 1 : 0.25}
+                  pointerEvents={visible ? "auto" : "none"}
                 >
                   <rect
                     x={stand.x}

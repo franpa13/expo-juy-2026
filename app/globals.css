@@ -39,6 +39,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-line: var(--line);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -64,6 +65,7 @@
   --accent: #25c0d4;
   --accent-foreground: #06282c;
   --destructive: #dc2626;
+  --line: #bdbfc1;
   --border: #e6e2ed;
   --input: #e6e2ed;
   --ring: #774ff0;
@@ -99,6 +101,7 @@
   --accent: #34d6e8;
   --accent-foreground: #072226;
   --destructive: #f87171;
+  --line: #4b4453;
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
   --ring: #a992f2;

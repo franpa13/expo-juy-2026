@@ -74,11 +74,22 @@ export function VenueMap({
             {stands.map((stand) => {
               const exhibitor = exhibitorsById.get(stand.exhibitorId);
               const visible = isVisible(stand);
+              const handleSelectStand = () => setSelectedStandId(stand.id);
+              const handleKeyDown = (e: React.KeyboardEvent<SVGGElement>) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleSelectStand();
+                }
+              };
               return (
                 <g
                   key={stand.id}
-                  onClick={() => setSelectedStandId(stand.id)}
-                  className="cursor-pointer"
+                  onClick={handleSelectStand}
+                  onKeyDown={handleKeyDown}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={exhibitor?.name ?? stand.id}
+                  className="cursor-pointer outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded"
                   opacity={visible ? 1 : 0.25}
                 >
                   <rect

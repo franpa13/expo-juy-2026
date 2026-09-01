@@ -2,10 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { NAV_LINKS } from "./nav-links";
 import { MobileNav } from "./mobile-nav";
+import { StrataDivider } from "./strata";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-40 bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2" aria-label="ExpoJuy 2026, inicio">
           <Image
@@ -15,7 +16,7 @@ export function SiteHeader() {
             height={32}
             priority
           />
-          <span className="font-semibold tracking-tight">ExpoJuy 2026</span>
+          <span className="font-extrabold tracking-tight">ExpoJuy 2026</span>
         </Link>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Navegación principal">
           {NAV_LINKS.map((link) => (
@@ -30,6 +31,7 @@ export function SiteHeader() {
         </nav>
         <MobileNav />
       </div>
+      <StrataDivider className="h-0.75 rounded-none" />
     </header>
   );
 }

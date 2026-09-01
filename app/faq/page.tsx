@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/layout/page-header";
 import { FaqAccordion, FAQS } from "@/features/faq";
 
 export const metadata: Metadata = {
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight">Preguntas frecuentes</h1>
-      <div className="mt-8">
+      <PageHeader eyebrow={`${FAQS.length} preguntas`} title="Preguntas frecuentes" />
+      <div className="mt-10">
         <FaqAccordion items={FAQS} />
       </div>
     </div>

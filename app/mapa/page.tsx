@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/layout/page-header";
 import { VenueMap, STANDS } from "@/features/venue-map";
 import { EXHIBITORS } from "@/features/exhibitors";
 
@@ -8,14 +9,16 @@ export const metadata: Metadata = {
 };
 
 export default function MapaPage() {
+  const zoneCount = new Set(STANDS.map((stand) => stand.zone)).size;
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight">Mapa del predio</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        Ubicá cada stand por zona y rubro. Filtrá por rubro y tocá un stand para
-        ver el detalle del expositor.
-      </p>
-      <div className="mt-8">
+      <PageHeader
+        eyebrow={`${STANDS.length} stands · ${zoneCount} zonas`}
+        title="Mapa del predio"
+        description="Ubicá cada stand por zona y rubro. Buscá o filtrá por rubro y tocá un stand para ver el detalle del expositor."
+      />
+      <div className="mt-10">
         <VenueMap stands={STANDS} exhibitors={EXHIBITORS} />
       </div>
     </div>

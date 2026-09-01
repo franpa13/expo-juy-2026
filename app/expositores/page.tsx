@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/layout/page-header";
 import { ExhibitorsExplorer, EXHIBITORS } from "@/features/exhibitors";
+import { RUBROS } from "@/lib/rubros";
 
 export const metadata: Metadata = {
   title: "Expositores | ExpoJuy 2026",
@@ -9,12 +11,12 @@ export const metadata: Metadata = {
 export default function ExpositoresPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight">Expositores</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">
-        Explorá las empresas, cooperativas y organizaciones que participan de
-        ExpoJuy 2026. Buscá por nombre o filtrá por rubro.
-      </p>
-      <div className="mt-8">
+      <PageHeader
+        eyebrow={`${EXHIBITORS.length} empresas · ${RUBROS.length} rubros`}
+        title="Expositores"
+        description="Explorá las empresas, cooperativas y organizaciones que participan de ExpoJuy 2026. Buscá por nombre o filtrá por rubro."
+      />
+      <div className="mt-10">
         <ExhibitorsExplorer exhibitors={EXHIBITORS} />
       </div>
     </div>

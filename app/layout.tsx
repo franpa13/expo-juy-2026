@@ -3,6 +3,7 @@ import { Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { AssistantWidget } from "@/features/assistant";
 
 const manrope = Manrope({
   variable: "--font-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <AssistantWidget />
       </body>
     </html>
   );

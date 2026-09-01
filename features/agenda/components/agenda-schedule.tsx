@@ -20,7 +20,9 @@ export function AgendaSchedule({ sessions }: { sessions: AgendaSession[] }) {
       </TabsList>
       {days.map((d) => (
         <TabsContent key={d} value={String(d)} className="space-y-4">
-          <h3 className="text-sm font-medium text-muted-foreground">{AGENDA_DAYS[d]}</h3>
+          <h3 className="text-xs font-bold tracking-[0.14em] text-accent uppercase">
+            {AGENDA_DAYS[d]}
+          </h3>
           <div className="grid gap-4 sm:grid-cols-2">
             {sessions
               .filter((s) => s.day === d)

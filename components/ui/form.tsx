@@ -32,7 +32,7 @@ function FormField<
 >({ name, ...props }: ControllerProps<TFieldValues, TName>) {
   return (
     <FormFieldContext.Provider value={{ name }}>
-      <Controller {...(props as any)} name={name} />
+      <Controller {...props} name={name} />
     </FormFieldContext.Provider>
   )
 }
@@ -108,14 +108,14 @@ function FormControl({
       data-slot="form-control"
       {...props}
     >
-      {React.isValidElement(children)
+      {React.isValidElement<Record<string, unknown>>(children)
         ? React.cloneElement(children, {
             id: formItemId,
             "aria-describedby": !error
               ? formDescriptionId
               : `${formDescriptionId} ${formMessageId}`,
             "aria-invalid": !!error,
-          } as any)
+          })
         : children}
     </div>
   )

@@ -40,6 +40,7 @@ export function VenueMap({
 }) {
   const [rubro, setRubro] = useState<Rubro | "all">("all");
   const [selectedStandId, setSelectedStandId] = useState<string | null>(null);
+  const [focusedStandId, setFocusedStandId] = useState<string | null>(null);
 
   const exhibitorsById = useMemo(
     () => new Map(exhibitors.map((e) => [e.id, e])),
@@ -77,7 +78,7 @@ export function VenueMap({
         <CardContent>
           <svg
             viewBox="0 0 920 280"
-            role="img"
+            role="group"
             aria-label="Plano del predio con los stands de expositores"
             className="w-full rounded-md border border-border bg-muted/30"
           >
@@ -91,15 +92,26 @@ export function VenueMap({
                   handleSelectStand();
                 }
               };
+              const isFocused = focusedStandId === stand.id;
+              const isSelected = selectedStandId === stand.id;
+              const strokeColor = isFocused
+                ? "var(--ring)"
+                : isSelected
+                  ? "var(--foreground)"
+                  : "transparent";
               return (
                 <g
                   key={stand.id}
                   onClick={handleSelectStand}
                   onKeyDown={handleKeyDown}
+                  onFocus={() => setFocusedStandId(stand.id)}
+                  onBlur={() =>
+                    setFocusedStandId((current) => (current === stand.id ? null : current))
+                  }
                   tabIndex={0}
                   role="button"
                   aria-label={exhibitor?.name ?? stand.id}
-                  className="cursor-pointer outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded"
+                  className="cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   opacity={visible ? 1 : 0.25}
                 >
                   <rect
@@ -109,7 +121,7 @@ export function VenueMap({
                     height={stand.height}
                     rx={8}
                     fill={ZONE_FILL[stand.zone]}
-                    stroke={selectedStandId === stand.id ? "var(--foreground)" : "transparent"}
+                    stroke={strokeColor}
                     strokeWidth={3}
                   />
                   <text

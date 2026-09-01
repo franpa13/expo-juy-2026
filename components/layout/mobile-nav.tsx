@@ -19,7 +19,7 @@ export function MobileNav() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden" aria-label="Abrir menú">
+        <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Abrir menú">
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>

@@ -17,7 +17,7 @@ export function SiteHeader() {
           />
           <span className="font-semibold tracking-tight">ExpoJuy 2026</span>
         </Link>
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Navegación principal">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Navegación principal">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

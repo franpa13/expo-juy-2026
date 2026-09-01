@@ -1,16 +1,23 @@
 import type { Metadata } from "next";
 import { Manrope, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { THEME_STORAGE_KEY } from "@/components/layout/theme-toggle";
+import { THEME_STORAGE_KEY } from "@/components/layout/theme-constants";
 import { AssistantWidget } from "@/features/assistant";
 
-// Runs before hydration so the page never paints the wrong theme and then
-// flashes to the right one. Reads the stored choice, falling back to the
-// OS preference the first time a visitor shows up. Mutates <html> outside
-// React's render — paired with suppressHydrationWarning below.
+// Runs before first paint so the page never flashes the wrong theme.
+// Rendered as a plain <script> (not next/script) guarded to the server:
+// React 19 warns ("Encountered a script tag while rendering React
+// component") on ANY inline <script> a component renders, next/script's
+// beforeInteractive included — a known, still-open friction point between
+// React 19 and Next 16 (tracked upstream in next-themes, shadcn/ui, and
+// others). Since this element only ever needs to exist in the
+// server-rendered HTML — browsers execute it there the instant it's
+// parsed, and it has nothing left to do afterward — rendering `null` on
+// the client sidesteps the warning entirely instead of fighting it.
+// Mutates <html> outside React's render — paired with
+// suppressHydrationWarning below.
 const THEME_INIT_SCRIPT = `(function () {
   try {
     var stored = localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});
@@ -43,9 +50,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <Script id="theme-init" strategy="beforeInteractive">
-          {THEME_INIT_SCRIPT}
-        </Script>
+        {typeof window === "undefined" ? (
+          <script
+            id="theme-init"
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+          />
+        ) : null}
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

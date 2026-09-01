@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { THEME_STORAGE_KEY } from "./theme-constants";
 
-export const THEME_STORAGE_KEY = "expojuy-theme";
 type Theme = "light" | "dark";
 
 function applyTheme(theme: Theme) {

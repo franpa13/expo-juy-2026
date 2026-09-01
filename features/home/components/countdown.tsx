@@ -9,6 +9,8 @@ interface TimeLeft {
   seconds: number;
 }
 
+type EventStatus = "upcoming" | "live" | "ended";
+
 function getTimeLeft(targetDate: string): TimeLeft {
   const diff = Math.max(0, new Date(targetDate).getTime() - Date.now());
   return {
@@ -19,14 +21,49 @@ function getTimeLeft(targetDate: string): TimeLeft {
   };
 }
 
-export function Countdown({ targetDate }: { targetDate: string }) {
+function getStatus(targetDate: string, endDate?: string): EventStatus {
+  const now = Date.now();
+  if (now < new Date(targetDate).getTime()) return "upcoming";
+  if (endDate && now > new Date(endDate).getTime()) return "ended";
+  return "live";
+}
+
+export function Countdown({
+  targetDate,
+  endDate,
+}: {
+  targetDate: string;
+  /** Optional end of the event — once passed, shows an "ended" message instead of a frozen 00:00:00:00 countdown. */
+  endDate?: string;
+}) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
+  const [status, setStatus] = useState<EventStatus>("upcoming");
 
   useEffect(() => {
-    setTimeLeft(getTimeLeft(targetDate));
-    const interval = setInterval(() => setTimeLeft(getTimeLeft(targetDate)), 1000);
+    const tick = () => {
+      setStatus(getStatus(targetDate, endDate));
+      setTimeLeft(getTimeLeft(targetDate));
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [targetDate]);
+  }, [targetDate, endDate]);
+
+  if (status === "live") {
+    return (
+      <p className="text-lg font-semibold text-primary" role="status">
+        ¡El evento está en curso! Te esperamos en Ciudad Cultural.
+      </p>
+    );
+  }
+
+  if (status === "ended") {
+    return (
+      <p className="text-lg font-semibold text-muted-foreground" role="status">
+        ExpoJuy 2026 finalizó. ¡Gracias por participar!
+      </p>
+    );
+  }
 
   const units: { label: string; value: number }[] = timeLeft
     ? [

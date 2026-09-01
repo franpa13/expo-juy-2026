@@ -21,6 +21,16 @@ const ZONE_FILL: Record<VenueStand["zone"], string> = {
   D: "var(--chart-4)",
 };
 
+// Zones A/B (deep violet, indigo) are dark enough for white labels; zones C/D
+// (lavender, turquoise) are too light for white text to meet contrast, so they
+// use the standard dark foreground token instead.
+const ZONE_TEXT: Record<VenueStand["zone"], string> = {
+  A: "var(--primary-foreground)",
+  B: "var(--primary-foreground)",
+  C: "var(--foreground)",
+  D: "var(--foreground)",
+};
+
 export function VenueMap({
   stands,
   exhibitors,
@@ -109,7 +119,7 @@ export function VenueMap({
                     dominantBaseline="middle"
                     fontSize={14}
                     fontWeight={600}
-                    fill="var(--primary-foreground)"
+                    fill={ZONE_TEXT[stand.zone]}
                   >
                     {stand.id}
                   </text>

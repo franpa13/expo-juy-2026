@@ -26,7 +26,10 @@ export function Hero() {
           </Button>
         </div>
         <div className="mt-10">
-          <Countdown targetDate="2026-10-09T10:00:00-03:00" />
+          <Countdown
+            targetDate="2026-10-09T10:00:00-03:00"
+            endDate="2026-10-12T18:00:00-03:00"
+          />
         </div>
       </div>
     </section>

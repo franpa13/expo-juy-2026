@@ -39,8 +39,8 @@ export function MobileNav() {
                 asChild
                 variant="ghost"
                 className={cn(
-                  "justify-start text-sm font-medium normal-case tracking-normal hover:underline",
-                  active ? "text-foreground underline" : "text-foreground"
+                  "group relative justify-start text-sm font-medium normal-case tracking-normal",
+                  "text-foreground"
                 )}
               >
                 <Link
@@ -49,6 +49,13 @@ export function MobileNav() {
                   aria-current={active ? "page" : undefined}
                 >
                   {link.label}
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-x-4 bottom-1 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-300 ease-out group-hover:scale-x-100",
+                      active && "scale-x-100"
+                    )}
+                  />
                 </Link>
               </Button>
             );

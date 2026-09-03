@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MobileNav } from "./mobile-nav";
+import { PageContainer } from "./page-container";
 import { SiteNav } from "./site-nav";
 import { StrataDivider } from "./strata";
 import { ThemeToggle } from "./theme-toggle";
@@ -8,7 +9,7 @@ import { ThemeToggle } from "./theme-toggle";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/90 backdrop-blur">
-      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6">
+      <PageContainer className="grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 py-0">
         <Link href="/" className="flex items-center gap-2" aria-label="ExpoJuy 2026, inicio">
           <Image
             src="/images/logos/expojuy26_isologotipo.png"
@@ -23,7 +24,7 @@ export function SiteHeader() {
           <ThemeToggle />
           <MobileNav />
         </div>
-      </div>
+      </PageContainer>
       <StrataDivider className="h-0.75 rounded-none" />
     </header>
   );

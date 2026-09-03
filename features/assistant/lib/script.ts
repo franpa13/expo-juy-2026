@@ -21,8 +21,8 @@ const SCRIPT: ScriptEntry[] = [
     answer: "En la sección Agenda vas a encontrar el cronograma completo y un planificador que arma tu itinerario sin choques de horario.",
   },
   {
-    keywords: ["entrada", "precio", "costo"],
-    answer: "El esquema de entradas todavía no está publicado. Mirá la sección Preguntas frecuentes para novedades.",
+    keywords: ["entrada", "precio", "costo", "acredit", "pase"],
+    answer: "La entrada general es sin cargo con acreditación previa. En la sección Entradas elegís tu pase y te llevás tu itinerario de los cuatro días adentro del código QR.",
   },
   {
     keywords: ["contacto", "inscribir", "sponsor"],

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/layout/page-container";
 import { StrataPanel } from "@/components/layout/strata";
@@ -37,7 +38,22 @@ export function Hero() {
             />
           </div>
         </div>
-        <StrataPanel className="h-40 rounded-3xl sm:h-56 lg:h-104 lg:rounded-[2.5rem]" />
+        <StrataPanel className="h-40 rounded-3xl sm:h-56 lg:h-104 lg:rounded-[2.5rem]">
+          {/* The lockup keeps a white ground in both themes: its wordmark is
+              graphite and its isotype violet, so it needs a light surface to
+              stay legible — over the bands directly, neither would read. */}
+          <div className="w-full max-w-sm rounded-2xl bg-white px-6 py-5 shadow-xl shadow-neutral-950/15 sm:px-8 sm:py-7">
+            <Image
+              src="/images/logos/expojuy26_horizontal_trim.png"
+              alt="ExpoJuy 2026"
+              width={1934}
+              height={542}
+              priority
+              sizes="(min-width: 1024px) 24rem, (min-width: 640px) 20rem, 70vw"
+              className="h-auto w-full"
+            />
+          </div>
+        </StrataPanel>
       </PageContainer>
     </section>
   );

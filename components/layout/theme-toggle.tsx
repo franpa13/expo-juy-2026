@@ -1,35 +1,31 @@
 "use client";
 
-import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { THEME_STORAGE_KEY } from "./theme-constants";
 
-type Theme = "light" | "dark";
-
-function applyTheme(theme: Theme) {
-  document.documentElement.classList.toggle("dark", theme === "dark");
-}
-
-// The real theme is already on <html> by the time this component ever
-// mounts — set synchronously by the anti-flash inline script in
-// app/layout.tsx, before React hydrates. Reading it here (instead of in an
-// effect) means no extra render — but on the server this always reads
-// "light" (there is no <html> to inspect), so the client's first real
-// render can legitimately differ. That one-node mismatch is exactly what
-// suppressHydrationWarning exists for, below.
-function readTheme(): Theme {
-  if (typeof document === "undefined") return "light";
-  return document.documentElement.classList.contains("dark") ? "dark" : "light";
-}
-
+/**
+ * Which icon shows is decided by CSS, not by React state.
+ *
+ * The obvious version — hold the theme in state and branch on it — cannot
+ * hydrate cleanly: on the server there is no <html> to inspect, so it always
+ * renders the light-mode icon, while the client renders whatever the
+ * anti-flash script in app/layout.tsx already put on <html>. A dark-mode
+ * visitor therefore gets a moon from the server and a sun from the client.
+ * `suppressHydrationWarning` does not cover that: it forgives an element's
+ * own attributes and text, not a different element appearing in its subtree.
+ *
+ * Rendering both icons and letting the `dark` class choose between them
+ * removes the branch entirely. Server and client emit identical markup, the
+ * right icon is correct before React ever hydrates, and the component needs
+ * no state at all — the current theme is read off <html> at click time,
+ * which is the one place it is always authoritative.
+ */
 export function ThemeToggle({ className }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>(readTheme);
-
   function toggle() {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    applyTheme(next);
+    const root = document.documentElement;
+    const next = root.classList.contains("dark") ? "light" : "dark";
+    root.classList.toggle("dark", next === "dark");
     try {
       localStorage.setItem(THEME_STORAGE_KEY, next);
     } catch {
@@ -43,10 +39,10 @@ export function ThemeToggle({ className }: { className?: string }) {
       size="icon"
       onClick={toggle}
       className={className}
-      aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-      suppressHydrationWarning
+      aria-label="Cambiar entre modo claro y oscuro"
     >
-      {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+      <Sun className="hidden size-4 dark:block" aria-hidden="true" />
+      <Moon className="size-4 dark:hidden" aria-hidden="true" />
     </Button>
   );
 }

@@ -44,11 +44,23 @@ export function StrataDivider({ className }: { className?: string }) {
   );
 }
 
-export function StrataPanel({ className }: { className?: string }) {
+/**
+ * `children` sit centered on top of the bands — the panel is the ground, not
+ * the content. When something is placed inside, only the bands keep
+ * `aria-hidden`; the panel itself has to stay reachable so whatever it holds
+ * (the ExpoJuy lockup, on the home hero) is still announced.
+ */
+export function StrataPanel({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   const total = BANDS.reduce((sum, b) => sum + b.weight, 0);
   return (
-    <div aria-hidden="true" className={cn("relative overflow-hidden", className)}>
-      <div className="absolute inset-[-15%] -rotate-6">
+    <div className={cn("relative overflow-hidden", className)}>
+      <div aria-hidden="true" className="absolute inset-[-15%] -rotate-6">
         <div className="flex h-full w-full flex-col">
           {BANDS.map((b, i) => (
             <div
@@ -58,6 +70,11 @@ export function StrataPanel({ className }: { className?: string }) {
           ))}
         </div>
       </div>
+      {children ? (
+        <div className="relative flex h-full w-full items-center justify-center p-6 sm:p-8">
+          {children}
+        </div>
+      ) : null}
     </div>
   );
 }

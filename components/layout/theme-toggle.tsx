@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { THEME_STORAGE_KEY } from "./theme-constants";
 
 type Theme = "light" | "dark";
@@ -25,9 +26,10 @@ function readTheme(): Theme {
 
 export function ThemeToggle({ className }: { className?: string }) {
   const [theme, setTheme] = useState<Theme>(readTheme);
+  const isDark = theme === "dark";
 
   function toggle() {
-    const next: Theme = theme === "dark" ? "light" : "dark";
+    const next: Theme = isDark ? "light" : "dark";
     setTheme(next);
     applyTheme(next);
     try {
@@ -38,15 +40,45 @@ export function ThemeToggle({ className }: { className?: string }) {
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isDark}
       onClick={toggle}
-      className={className}
-      aria-label={theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+      aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
       suppressHydrationWarning
+      className={cn(
+        "inline-flex h-7 w-12 shrink-0 items-center rounded-full border border-border p-1 transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        isDark ? "bg-primary/25" : "bg-muted",
+        className
+      )}
     >
-      {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-    </Button>
+      <motion.span
+        suppressHydrationWarning
+        animate={{ x: isDark ? 20 : 0 }}
+        transition={{ type: "spring", stiffness: 500, damping: 32 }}
+        className="relative flex size-5 items-center justify-center rounded-full bg-background shadow-sm"
+      >
+        <motion.span
+          suppressHydrationWarning
+          initial={false}
+          animate={{ opacity: isDark ? 0 : 1, rotate: isDark ? 90 : 0, scale: isDark ? 0.4 : 1 }}
+          transition={{ duration: 0.2 }}
+          className="absolute inline-flex"
+        >
+          <Sun className="size-3 text-primary" />
+        </motion.span>
+        <motion.span
+          suppressHydrationWarning
+          initial={false}
+          animate={{ opacity: isDark ? 1 : 0, rotate: isDark ? 0 : -90, scale: isDark ? 1 : 0.4 }}
+          transition={{ duration: 0.2 }}
+          className="absolute inline-flex"
+        >
+          <Moon className="size-3 text-accent" />
+        </motion.span>
+      </motion.span>
+    </button>
   );
 }

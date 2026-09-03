@@ -50,7 +50,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       className={cn(
         "inline-flex h-7 w-12 shrink-0 items-center rounded-full border border-border p-1 transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        isDark ? "bg-primary/25" : "bg-muted",
+        isDark ? "bg-primary/30" : "bg-foreground/15",
         className
       )}
     >
@@ -58,7 +58,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         suppressHydrationWarning
         animate={{ x: isDark ? 20 : 0 }}
         transition={{ type: "spring", stiffness: 500, damping: 32 }}
-        className="relative flex size-5 items-center justify-center rounded-full bg-background shadow-sm"
+        className="relative flex size-5 items-center justify-center rounded-full bg-background shadow-md"
       >
         <motion.span
           suppressHydrationWarning

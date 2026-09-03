@@ -34,20 +34,23 @@ export function MobileNav() {
           {NAV_LINKS.map((link) => {
             const active = isNavLinkActive(pathname, link.href);
             return (
-              <Link
+              <Button
                 key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                aria-current={active ? "page" : undefined}
+                asChild
+                variant="ghost"
                 className={cn(
-                  "rounded-md border-l-2 border-transparent px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "border-accent bg-muted font-semibold text-foreground"
-                    : "text-foreground hover:bg-muted"
+                  "justify-start text-sm font-medium normal-case tracking-normal hover:underline",
+                  active ? "text-foreground underline" : "text-foreground"
                 )}
               >
-                {link.label}
-              </Link>
+                <Link
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              </Button>
             );
           })}
         </nav>

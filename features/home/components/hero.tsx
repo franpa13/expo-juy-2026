@@ -1,8 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/layout/page-container";
-import { StrataPanel } from "@/components/layout/strata";
 import { Countdown } from "./countdown";
+
+const VIDEO_FRAME_CLASSES = "h-40 w-full rounded-3xl object-cover sm:h-56 lg:h-104 lg:rounded-[2.5rem]";
 
 export function Hero() {
   return (
@@ -37,7 +39,28 @@ export function Hero() {
             />
           </div>
         </div>
-        <StrataPanel className="h-40 rounded-3xl sm:h-56 lg:h-104 lg:rounded-[2.5rem]" />
+        <div className="relative">
+          {/* Real footage from a past ExpoJuy edition, filmed at Ciudad Cultural —
+              muted, looping ambiance. A static frame stands in for it when a
+              viewer has prefers-reduced-motion on. */}
+          <video
+            className={`${VIDEO_FRAME_CLASSES} motion-reduce:hidden`}
+            src="/videos/expojuy-highlights.mp4"
+            poster="/images/expojuy-highlights-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+          />
+          <Image
+            src="/images/expojuy-highlights-poster.jpg"
+            alt="Fotografía aérea nocturna de Ciudad Cultural durante una edición anterior de ExpoJuy"
+            width={1280}
+            height={720}
+            className={`hidden ${VIDEO_FRAME_CLASSES} motion-reduce:block`}
+          />
+        </div>
       </PageContainer>
     </section>
   );

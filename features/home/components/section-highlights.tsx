@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
+import { Reveal } from "@/components/layout/reveal";
 
 const HIGHLIGHTS = [
   { href: "/expositores", title: "Expositores", description: "Buscá y filtrá empresas por rubro." },
@@ -14,26 +15,29 @@ const HIGHLIGHTS = [
 export function SectionHighlights() {
   return (
     <PageContainer>
-      <p className="text-xs font-bold tracking-[0.14em] text-accent uppercase">Recorré el sitio</p>
-      <h2 className="mt-3 text-3xl font-extrabold tracking-tight">Todo lo que necesitás saber</h2>
+      <Reveal>
+        <p className="text-xs font-bold tracking-[0.14em] text-accent uppercase">Recorré el sitio</p>
+        <h2 className="mt-3 text-3xl font-extrabold tracking-tight">Todo lo que necesitás saber</h2>
+      </Reveal>
       <div className="mt-8 border-t border-line">
-        {HIGHLIGHTS.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="group flex items-center justify-between gap-6 border-b border-line py-6 transition-colors hover:bg-secondary/40"
-          >
-            <div className="flex items-baseline gap-4 sm:gap-8">
-              <span className="text-xl font-bold tracking-tight sm:text-2xl">{item.title}</span>
-              <span className="hidden max-w-xs text-sm text-muted-foreground sm:block">
-                {item.description}
-              </span>
-            </div>
-            <ArrowUpRight
-              className="size-6 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
-              aria-hidden="true"
-            />
-          </Link>
+        {HIGHLIGHTS.map((item, i) => (
+          <Reveal key={item.href} delay={i * 0.06}>
+            <Link
+              href={item.href}
+              className="group flex items-center justify-between gap-6 border-b border-line py-6 transition-colors hover:bg-secondary/40"
+            >
+              <div className="flex items-baseline gap-4 sm:gap-8">
+                <span className="text-xl font-bold tracking-tight sm:text-2xl">{item.title}</span>
+                <span className="hidden max-w-xs text-sm text-muted-foreground sm:block">
+                  {item.description}
+                </span>
+              </div>
+              <ArrowUpRight
+                className="size-6 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+                aria-hidden="true"
+              />
+            </Link>
+          </Reveal>
         ))}
       </div>
     </PageContainer>

@@ -8,19 +8,18 @@ import { ThemeToggle } from "./theme-toggle";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2" aria-label="ExpoJuy 2026, inicio">
           <Image
             src="/images/logos/expojuy26_isologotipo.png"
             alt=""
-            width={32}
-            height={32}
+            width={38}
+            height={38}
             priority
           />
-          <span className="font-extrabold tracking-tight">ExpoJuy 2026</span>
         </Link>
-        <SiteNav className="hidden lg:flex" />
-        <div className="flex items-center gap-1">
+        <SiteNav className="hidden justify-center lg:flex" />
+        <div className="flex items-center justify-end gap-1">
           <ThemeToggle />
           <MobileNav />
         </div>

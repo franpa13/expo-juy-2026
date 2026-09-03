@@ -20,8 +20,8 @@ export function SiteHeader() {
           <Image
             src="/images/logos/expojuy26_isologotipo.png"
             alt=""
-            width={35}
-            height={35}
+            width={40}
+            height={40}
             priority
           />
         </Link>

@@ -8,6 +8,12 @@ export type TicketTierId = (typeof TICKET_TIER_IDS)[number];
 export interface TicketTier {
   id: TicketTierId;
   name: string;
+  /**
+   * Who the pass is for, in two or three words. Carries the job a "most
+   * popular" ribbon would otherwise do, without ranking the options for the
+   * visitor: each tier says who it is for and they pick.
+   */
+  audience: string;
   /** Human-readable price. Free and by-invitation tiers say so in words. */
   price: string;
   priceNote: string;

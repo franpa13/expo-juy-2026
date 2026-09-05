@@ -14,7 +14,7 @@ export default function EntradasPage() {
   return (
     <>
       <TicketsHero />
-      <PageContainer className="py-16">
+      <PageContainer className="pt-10">
         <AccreditationFlow
           tiers={TICKET_TIERS}
           sessions={SESSIONS}

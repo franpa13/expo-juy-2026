@@ -9,6 +9,7 @@ export const TICKET_TIERS: TicketTier[] = [
   {
     id: "general",
     name: "Entrada general",
+    audience: "Visitantes y estudiantes",
     price: "Sin cargo",
     priceNote: "Acreditación previa obligatoria",
     summary:
@@ -24,6 +25,7 @@ export const TICKET_TIERS: TicketTier[] = [
   {
     id: "profesional",
     name: "Pase profesional",
+    audience: "Quienes vienen a hacer negocios",
     price: "$ 12.000",
     priceNote: "Por persona · los 4 días",
     summary:
@@ -41,6 +43,7 @@ export const TICKET_TIERS: TicketTier[] = [
   {
     id: "institucional",
     name: "Expositor / institucional",
+    audience: "Empresas e instituciones",
     price: "Por gestión",
     priceNote: "Con la Cámara de Comercio Exterior",
     summary:

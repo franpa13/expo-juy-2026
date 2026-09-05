@@ -1,12 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Lock } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { Lock } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { riseItem, staggerContainer } from "../lib/motion-presets";
 import type { TicketTier } from "../types";
 
+/**
+ * Rank is carried by weight, not by a ribbon — the same call the sponsors
+ * page makes with its tiers: the pass most people come for sits on a filled
+ * card with a heavier rule, the other two stay quiet. A "MÁS ELEGIDO" tag
+ * would also be a claim this prototype cannot back with numbers, whereas the
+ * `audience` line on every card tells a visitor which one is theirs.
+ *
+ * What each pass includes is a ruled list, the reading rhythm used across the
+ * site (the footer, the itinerary inside the pass), rather than a column of
+ * check marks.
+ */
 export function TierGrid({
   tiers,
   selectedId,
@@ -37,61 +49,54 @@ export function TierGrid({
           <motion.li key={tier.id} variants={item} className="flex">
             <article
               className={cn(
-                "relative flex w-full flex-col border bg-card p-6 transition-colors",
+                "flex w-full flex-col border p-6 transition-colors",
                 selected
-                  ? "border-primary ring-2 ring-primary/25"
+                  ? "border-primary bg-secondary/50 ring-2 ring-primary/25"
                   : tier.featured
-                    ? "border-primary/50"
-                    : "border-line"
+                    ? "border-primary/40 bg-secondary/40"
+                    : "border-line bg-card"
               )}
             >
-              {tier.featured ? (
-                <span className="absolute -top-px right-6 -translate-y-1/2 bg-primary px-2.5 py-1 text-[0.65rem] font-bold tracking-[0.14em] text-primary-foreground uppercase">
-                  Más elegido
-                </span>
-              ) : null}
+              <p className="text-xs font-bold tracking-[0.14em] text-accent uppercase">
+                {tier.audience}
+              </p>
+              <h3
+                className={cn(
+                  "mt-3 font-extrabold tracking-tight",
+                  tier.featured ? "text-2xl" : "text-xl"
+                )}
+              >
+                {tier.name}
+              </h3>
 
-              <h3 className="text-xl font-extrabold tracking-tight">{tier.name}</h3>
-
-              <p className="mt-4 flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold tracking-tight tabular-nums">
-                  {tier.price}
-                </span>
+              <p className="mt-5 text-3xl font-extrabold tracking-tight tabular-nums">
+                {tier.price}
               </p>
               <p className="mt-1 text-xs font-bold tracking-[0.1em] text-muted-foreground uppercase">
                 {tier.priceNote}
               </p>
 
-              <p className="mt-4 text-sm text-muted-foreground">{tier.summary}</p>
+              <p className="mt-5 text-sm text-muted-foreground">{tier.summary}</p>
 
-              <ul className="mt-6 flex flex-col gap-2.5 border-t border-line pt-6 text-sm">
+              <ul className="mt-6 divide-y divide-line border-t border-line text-sm">
                 {tier.includes.map((line) => (
-                  <li key={line} className="flex items-start gap-2.5">
-                    <Check
-                      className="mt-0.5 size-4 shrink-0 text-accent"
-                      aria-hidden="true"
-                    />
-                    <span>{line}</span>
+                  <li key={line} className="py-2.5">
+                    {line}
                   </li>
                 ))}
               </ul>
 
               <div className="mt-6 flex grow items-end pt-2">
                 {tier.selfService && onSelect ? (
-                  <button
+                  <Button
                     type="button"
+                    variant={selected ? "default" : "outline"}
                     onClick={() => onSelect(tier.id)}
                     aria-pressed={selected}
-                    className={cn(
-                      "h-10 w-full border text-xs font-semibold tracking-widest uppercase transition-all outline-none",
-                      "focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 active:translate-y-px",
-                      selected
-                        ? "border-transparent bg-primary text-primary-foreground"
-                        : "border-border hover:bg-muted"
-                    )}
+                    className="w-full"
                   >
                     {selected ? "Pase elegido" : "Elegir este pase"}
-                  </button>
+                  </Button>
                 ) : (
                   // The icon and the sentence are the only flex items — the
                   // sentence stays one text run so its final period does not

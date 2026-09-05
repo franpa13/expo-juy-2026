@@ -1,23 +1,26 @@
-import type { Transition, Variants } from "motion/react";
+import type { Transition, Variants } from "framer-motion";
 
 /**
- * One motion vocabulary for the whole entradas route: elements do not fade in
- * on their own schedule, they arrive as a sequence — badge, headline, subline,
- * buttons, stats — each on a spring rather than a linear tween, so the entrance
- * reads as physical instead of timed.
+ * One motion vocabulary for the whole entradas route — and it is the home
+ * page's vocabulary, not a second one. The hero, the stats band and the
+ * section index all move on the same curve and the same rise distance, so
+ * these presets restate that rather than inventing a spring-and-blur feel
+ * that would make this route read like it came from a different site.
  *
- * Every variant here has a visible resting state (`show`); nothing is parked at
+ * Every variant has a visible resting state (`show`); nothing is parked at
  * opacity 0 waiting on a scroll listener that might never fire.
  */
 
-export const SPRING: Transition = {
-  type: "spring",
-  bounce: 0.28,
-  duration: 0.75,
+/** The site's ease — a fast start that settles, used by every home animation. */
+export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
+
+export const TRANSITION: Transition = {
+  duration: 0.65,
+  ease: EASE_OUT_EXPO,
 };
 
 /** Parent: holds no visual change of its own, only the timing of its children. */
-export function staggerContainer(stagger = 0.07, delay = 0.05): Variants {
+export function staggerContainer(stagger = 0.08, delay = 0.05): Variants {
   return {
     hidden: {},
     show: {
@@ -26,30 +29,29 @@ export function staggerContainer(stagger = 0.07, delay = 0.05): Variants {
   };
 }
 
-/** Child: rises and sharpens into place. `reduced` collapses it to a plain fade. */
-export function riseItem(reduced: boolean, distance = 22): Variants {
-  if (reduced) {
-    return {
-      hidden: { opacity: 0 },
-      show: { opacity: 1, transition: { duration: 0.25 } },
-    };
-  }
+/** Child: rises into place. `reduced` collapses it to a near-instant fade. */
+export function riseItem(reduced: boolean, distance = 18): Variants {
   return {
-    hidden: { opacity: 0, y: distance, filter: "blur(6px)" },
-    show: { opacity: 1, y: 0, filter: "blur(0px)", transition: SPRING },
+    hidden: { opacity: 0, y: reduced ? 0 : distance },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: reduced ? { duration: 0.01 } : TRANSITION,
+    },
   };
 }
 
-/** Child variant for things that should scale in rather than rise — the pass, a badge. */
+/**
+ * Child variant for things that should scale in rather than rise — the pass
+ * itself. Mirrors how the home hero brings in its video panel.
+ */
 export function popItem(reduced: boolean): Variants {
-  if (reduced) {
-    return {
-      hidden: { opacity: 0 },
-      show: { opacity: 1, transition: { duration: 0.25 } },
-    };
-  }
   return {
-    hidden: { opacity: 0, scale: 0.94, filter: "blur(6px)" },
-    show: { opacity: 1, scale: 1, filter: "blur(0px)", transition: SPRING },
+    hidden: { opacity: 0, scale: reduced ? 1 : 0.96 },
+    show: {
+      opacity: 1,
+      scale: 1,
+      transition: reduced ? { duration: 0.01 } : { duration: 0.8, ease: EASE_OUT_EXPO },
+    },
   };
 }

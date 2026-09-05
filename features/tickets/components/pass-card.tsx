@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "framer-motion";
+import { AnimatedCounter } from "@/components/layout/animated-counter";
+import { StrataDivider } from "@/components/layout/strata";
 import { AGENDA_DAYS } from "@/features/agenda";
 import { RUBRO_LABELS } from "@/lib/rubros";
 import { passQrPayload } from "../lib/pass";
@@ -35,6 +37,12 @@ export function PassCard({ pass }: { pass: Pass }) {
         variants={pop}
         className="relative isolate overflow-hidden bg-neutral-950 text-white"
       >
+        {/* Branded top edge, the same one the header and footer carry. In dark
+            mode the page ground is nearly as dark as the pass, and without a
+            hard boundary the credential stops reading as an object you were
+            handed. */}
+        <StrataDivider className="h-1 rounded-none" />
+
         <div
           aria-hidden="true"
           className="absolute inset-0 opacity-80"
@@ -100,7 +108,9 @@ export function PassCard({ pass }: { pass: Pass }) {
             { label: "Stands sugeridos", value: pass.stands.length },
           ].map((stat) => (
             <div key={stat.label} className="px-5 py-4 sm:px-8">
-              <dd className="text-2xl font-extrabold tabular-nums">{stat.value}</dd>
+              <dd className="text-2xl font-extrabold">
+                <AnimatedCounter value={stat.value} className="tabular-nums" />
+              </dd>
               <dt className="mt-1 text-[0.6rem] font-bold tracking-[0.12em] text-white/50 uppercase">
                 {stat.label}
               </dt>

@@ -55,6 +55,12 @@ Regla de dependencia: `app/*` solo importa `features/*/index.ts` y
 `components/layout`. Una feature nunca importa internals de otra feature
 directamente — si necesitan compartir algo, sube a `components/` o `lib/`.
 
+El pase del visitante es el caso testigo: lo emite `features/tickets`, pero lo
+leen agenda, expositores y mapa. Por eso vive en `lib/pass-scope.ts` (tipos y
+reglas puras) + `lib/pass-store.ts` (lectura de `localStorage` con
+`useSyncExternalStore`), y se muestra con `components/pass/pass-scope-bar.tsx`.
+Ninguna feature importa a otra para saber qué es "lo tuyo".
+
 ## Convenciones
 
 - Server Components por defecto; `"use client"` solo donde hay estado o

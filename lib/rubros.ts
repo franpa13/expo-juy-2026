@@ -32,3 +32,10 @@ export const RUBRO_COLOR: Record<Rubro, string> = {
   industria: "var(--primary)",
   "comercio-exterior": "var(--ring)",
 };
+
+/**
+ * A rubro, or the "general" track that belongs to no single one. Shared
+ * vocabulary between the agenda (session tracks), the accreditation form
+ * (interests) and the pass, declared here so the three never drift apart.
+ */
+export type RubroScope = Rubro | "general";

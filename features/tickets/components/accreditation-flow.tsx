@@ -18,6 +18,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { ActivityTrack, AgendaSession } from "@/features/agenda";
 import type { Exhibitor } from "@/features/exhibitors";
 import { RUBROS, RUBRO_LABELS } from "@/lib/rubros";
+import { usePassActions } from "@/lib/pass-store";
 import { findTier } from "../data/tiers";
 import { buildPass } from "../lib/pass";
 import { riseItem, staggerContainer } from "../lib/motion-presets";
@@ -71,6 +72,7 @@ export function AccreditationFlow({
   const reduced = useReducedMotion() ?? false;
   const item = riseItem(reduced, 16);
   const [pass, setPass] = useState<Pass | null>(null);
+  const { savePass } = usePassActions();
 
   const form = useForm<AccreditationFormValues>({
     resolver: zodResolver(accreditationSchema),
@@ -87,7 +89,17 @@ export function AccreditationFlow({
     if (!tier) return;
     // Prototype: no backend. In production this would POST to an API route
     // and the pass code would come back from the server, not from the client.
-    setPass(buildPass({ request: values, tier, sessions, exhibitors }));
+    const issued = buildPass({ request: values, tier, sessions, exhibitors });
+    setPass(issued);
+    // Hand the credential to the rest of the site: from here the agenda, the
+    // catalogue and the map can show this visitor their own ExpoJuy. Only the
+    // identity and the interests travel — itinerary and stands are derived.
+    savePass({
+      code: issued.code,
+      holderName: issued.holderName,
+      tierName: tier.name,
+      interests: values.interests,
+    });
   }
 
   return (

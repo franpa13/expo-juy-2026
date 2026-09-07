@@ -10,11 +10,19 @@ const sessions: AgendaSession[] = [
 ];
 
 describe("buildItinerary", () => {
-  it("returns all sessions sorted by start time when there are no interests or overlaps", () => {
-    const result = buildItinerary({ sessions: [sessions[0], sessions[2], sessions[3]], interests: [] });
-    expect(result.map((s) => s.id)).toEqual(["a", "d", "c"].sort((x, y) =>
-      sessions.find((s) => s.id === x)!.startTime.localeCompare(sessions.find((s) => s.id === y)!.startTime)
-    ));
+  it("returns every session in chronological order — day first, then start time", () => {
+    // d starts at 09:00 but on day 2, so it comes after day 1's later sessions.
+    const result = buildItinerary({ sessions: [sessions[2], sessions[3], sessions[0]], interests: [] });
+    expect(result.map((s) => s.id)).toEqual(["a", "c", "d"]);
+  });
+
+  it("does not interleave days when an earlier clock time falls on a later day", () => {
+    const acrossDays: AgendaSession[] = [
+      { id: "late-day1", day: 1, title: "", description: "", track: "general", startTime: "17:00", endTime: "18:00", location: "" },
+      { id: "early-day2", day: 2, title: "", description: "", track: "general", startTime: "09:00", endTime: "10:00", location: "" },
+    ];
+    const result = buildItinerary({ sessions: acrossDays, interests: [] });
+    expect(result.map((s) => s.id)).toEqual(["late-day1", "early-day2"]);
   });
 
   it("drops sessions that overlap an already-picked session on the same day", () => {

@@ -17,7 +17,10 @@ export function buildItinerary({ sessions, interests, day }: PlannerInput): Agen
     .filter((s) => (day === undefined ? true : s.day === day))
     .filter((s) => interests.length === 0 || interests.includes(s.track))
     .slice()
-    .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    // Day first, then start time. Sorting on start time alone interleaves the
+    // four days — a 10:30 on day 2 would sort ahead of an 11:30 on day 1 —
+    // which reads as a scrambled itinerary once the result is listed in order.
+    .sort((a, b) => a.day - b.day || a.startTime.localeCompare(b.startTime));
 
   const itinerary: AgendaSession[] = [];
   for (const session of pool) {

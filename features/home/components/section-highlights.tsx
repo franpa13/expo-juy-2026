@@ -4,6 +4,7 @@ import { PageContainer } from "@/components/layout/page-container";
 import { Reveal } from "@/components/layout/reveal";
 
 const HIGHLIGHTS = [
+  { href: "/entradas", title: "Entradas", description: "Acreditate y llevate tu itinerario en el pase." },
   { href: "/expositores", title: "Expositores", description: "Buscá y filtrá empresas por rubro." },
   { href: "/agenda", title: "Agenda inteligente", description: "Armá tu itinerario sin choques de horario." },
   { href: "/mapa", title: "Mapa del predio", description: "Ubicá cada stand en el plano interactivo." },

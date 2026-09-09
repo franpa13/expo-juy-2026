@@ -16,7 +16,8 @@ export const PASS_STORAGE_KEY = "expojuy:pase";
 export interface StoredPass {
   code: string;
   holderName: string;
-  tierName: string;
+  /** Id of the tier, not its name: the id is what lets the pass be rebuilt. */
+  tierId: string;
   interests: RubroScope[];
 }
 
@@ -32,7 +33,7 @@ export function isStoredPass(value: unknown): value is StoredPass {
     typeof pass.code === "string" &&
     pass.code.length > 0 &&
     typeof pass.holderName === "string" &&
-    typeof pass.tierName === "string" &&
+    typeof pass.tierId === "string" &&
     Array.isArray(pass.interests) &&
     pass.interests.every((interest) => typeof interest === "string")
   );

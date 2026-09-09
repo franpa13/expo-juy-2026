@@ -11,7 +11,7 @@ function makePass(overrides: Partial<StoredPass> = {}): StoredPass {
   return {
     code: "EJ26-ABCD-EF",
     holderName: "Ana María Quispe",
-    tierName: "Profesional",
+    tierId: "profesional",
     interests: ["mineria", "turismo"],
     ...overrides,
   };
@@ -36,9 +36,9 @@ describe("isStoredPass", () => {
     expect(isStoredPass({ ...makePass(), interests: ["mineria", 7] })).toBe(false);
   });
 
-  it("rejects an entry left by an older build without the tier name", () => {
+  it("rejects an entry left by an older build without the tier id", () => {
     const withoutTier: Record<string, unknown> = { ...makePass() };
-    delete withoutTier.tierName;
+    delete withoutTier.tierId;
     expect(isStoredPass(withoutTier)).toBe(false);
   });
 });

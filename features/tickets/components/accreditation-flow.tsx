@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -18,9 +18,9 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { ActivityTrack, AgendaSession } from "@/features/agenda";
 import type { Exhibitor } from "@/features/exhibitors";
 import { RUBROS, RUBRO_LABELS } from "@/lib/rubros";
-import { usePassActions } from "@/lib/pass-store";
+import { usePass, usePassActions } from "@/lib/pass-store";
 import { findTier } from "../data/tiers";
-import { buildPass } from "../lib/pass";
+import { buildPass, restorePass } from "../lib/pass";
 import { riseItem, staggerContainer } from "../lib/motion-presets";
 import { accreditationSchema, type AccreditationFormValues } from "../lib/schema";
 import type { Pass, TicketTier } from "../types";
@@ -71,8 +71,25 @@ export function AccreditationFlow({
 }) {
   const reduced = useReducedMotion() ?? false;
   const item = riseItem(reduced, 16);
-  const [pass, setPass] = useState<Pass | null>(null);
+  const [issuedPass, setIssuedPass] = useState<Pass | null>(null);
+  // Set when the visitor starts a new accreditation on this page, so the pass
+  // they are replacing stops reappearing under the form.
+  const [restoreDismissed, setRestoreDismissed] = useState(false);
+  const storedPass = usePass();
   const { savePass } = usePassActions();
+
+  // A visitor who accredited, walked through the agenda and came back has to
+  // find their pass here — otherwise "Ver mi pase" leads to an empty page.
+  // Only identity and interests were stored; the itinerary and the stands are
+  // rebuilt from the live programme.
+  const restoredPass = useMemo(() => {
+    if (!storedPass || restoreDismissed) return null;
+    const tier = findTier(storedPass.tierId);
+    if (!tier) return null;
+    return restorePass({ stored: storedPass, tier, sessions, exhibitors });
+  }, [storedPass, restoreDismissed, sessions, exhibitors]);
+
+  const pass = issuedPass ?? restoredPass;
 
   const form = useForm<AccreditationFormValues>({
     resolver: zodResolver(accreditationSchema),
@@ -90,14 +107,14 @@ export function AccreditationFlow({
     // Prototype: no backend. In production this would POST to an API route
     // and the pass code would come back from the server, not from the client.
     const issued = buildPass({ request: values, tier, sessions, exhibitors });
-    setPass(issued);
+    setIssuedPass(issued);
     // Hand the credential to the rest of the site: from here the agenda, the
     // catalogue and the map can show this visitor their own ExpoJuy. Only the
     // identity and the interests travel — itinerary and stands are derived.
     savePass({
       code: issued.code,
       holderName: issued.holderName,
-      tierName: tier.name,
+      tierId: tier.id,
       interests: values.interests,
     });
   }
@@ -116,7 +133,8 @@ export function AccreditationFlow({
             selectedId={tierId}
             onSelect={(id) => {
               form.setValue("tierId", id, { shouldValidate: true });
-              setPass(null);
+              setIssuedPass(null);
+              setRestoreDismissed(true);
             }}
           />
         </div>
@@ -145,7 +163,8 @@ export function AccreditationFlow({
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value as ActivityTrack[]);
-                        setPass(null);
+                        setIssuedPass(null);
+                        setRestoreDismissed(true);
                       }}
                       className="flex flex-wrap justify-start gap-2"
                       aria-label="Rubros de interés"

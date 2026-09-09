@@ -1,5 +1,7 @@
 import { buildItinerary, type AgendaSession } from "@/features/agenda";
 import type { Exhibitor } from "@/features/exhibitors";
+import type { StoredPass } from "@/lib/pass-scope";
+import type { ActivityTrack } from "@/features/agenda";
 import type { Pass, PassRequest, PassStand, TicketTier } from "../types";
 
 /**
@@ -83,4 +85,35 @@ export function buildPass({ request, tier, sessions, exhibitors }: BuildPassInpu
     stands,
     daysCovered: new Set(itinerary.map((session) => session.day)).size,
   };
+}
+
+interface RestorePassInput {
+  stored: StoredPass;
+  tier: TicketTier;
+  sessions: AgendaSession[];
+  exhibitors: Exhibitor[];
+}
+
+/**
+ * Rebuilds the full credential from the little that was stored. A visitor who
+ * accredited, walked through the agenda and came back to /entradas has to find
+ * their pass waiting — the stored slice carries the identity, and the
+ * itinerary and stands are recomputed here from live data, so a pass issued
+ * before a programme change comes back updated rather than stale.
+ */
+export function restorePass({
+  stored,
+  tier,
+  sessions,
+  exhibitors,
+}: RestorePassInput): Pass {
+  const request: PassRequest = {
+    fullName: stored.holderName,
+    email: "",
+    tierId: tier.id,
+    interests: stored.interests as ActivityTrack[],
+  };
+  // The code is the one the visitor already has; it is not recomputed, since
+  // buildPassCode hashes the email and the stored pass does not carry one.
+  return { ...buildPass({ request, tier, sessions, exhibitors }), code: stored.code };
 }

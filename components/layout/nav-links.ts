@@ -8,6 +8,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/sobre-expojuy", label: "Sobre ExpoJuy" },
   { href: "/expositores", label: "Expositores" },
   { href: "/agenda", label: "Agenda" },
+  { href: "/entradas", label: "Entradas" },
   { href: "/mapa", label: "Mapa del predio" },
   { href: "/noticias", label: "Noticias" },
   { href: "/sponsors", label: "Sponsors" },

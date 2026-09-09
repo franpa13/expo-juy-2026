@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { RUBROS, RUBRO_LABELS } from "@/lib/rubros";
+import { usePass } from "@/lib/pass-store";
 import { buildItinerary } from "../lib/planner";
 import type { ActivityTrack, AgendaSession } from "../types";
 import { SessionCard } from "./session-card";
@@ -14,7 +15,16 @@ const TRACK_OPTIONS: { value: ActivityTrack; label: string }[] = [
 ];
 
 export function AgendaPlanner({ sessions }: { sessions: AgendaSession[] }) {
-  const [interests, setInterests] = useState<ActivityTrack[]>([]);
+  const pass = usePass();
+  // Null means "the visitor has not touched the toggles yet", which is what
+  // lets an accredited visitor open the planner on the rubros they already
+  // chose when they accredited — without an effect that would overwrite a
+  // deliberate empty selection a moment later.
+  const [chosen, setChosen] = useState<ActivityTrack[] | null>(null);
+  const interests = useMemo(
+    () => chosen ?? pass?.interests ?? [],
+    [chosen, pass]
+  );
 
   const itinerary = useMemo(
     () => buildItinerary({ sessions, interests }),
@@ -34,7 +44,7 @@ export function AgendaPlanner({ sessions }: { sessions: AgendaSession[] }) {
         <ToggleGroup
           type="multiple"
           value={interests}
-          onValueChange={(v) => setInterests(v as ActivityTrack[])}
+          onValueChange={(v) => setChosen(v as ActivityTrack[])}
           className="flex flex-wrap justify-start gap-2"
           aria-label="Elegí tus intereses"
         >
@@ -49,7 +59,12 @@ export function AgendaPlanner({ sessions }: { sessions: AgendaSession[] }) {
           <p className="text-sm font-medium text-foreground" role="status">
             {interests.length === 0
               ? `Mostrando las ${itinerary.length} actividades sin superposición de horario.`
-              : `Tu itinerario tiene ${itinerary.length} actividades sin choques de horario.`}
+              : `Tu itinerario tiene ${itinerary.length} ${
+                  itinerary.length === 1 ? "actividad" : "actividades"
+                } sin choques de horario.`}
+            {pass && interests.length > 0
+              ? ` Armado a partir de tu pase ${pass.code}.`
+              : ""}
           </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {itinerary.map((session) => (

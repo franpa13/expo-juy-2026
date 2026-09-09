@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/select";
 import { RUBROS, RUBRO_LABELS, type Rubro } from "@/lib/rubros";
 import { filterExhibitors, type Exhibitor } from "@/features/exhibitors";
+import { PassScopeBar } from "@/components/pass/pass-scope-bar";
+import { passCoversEverything, passMatches } from "@/lib/pass-scope";
+import { usePass } from "@/lib/pass-store";
 import type { VenueStand } from "../types";
 
 const ZONE_FILL: Record<VenueStand["zone"], string> = {
@@ -43,6 +46,24 @@ export function VenueMap({
   const [rubro, setRubro] = useState<Rubro | "all">("all");
   const [selectedStandId, setSelectedStandId] = useState<string | null>(null);
   const [focusedStandId, setFocusedStandId] = useState<string | null>(null);
+  const pass = usePass();
+  const [onlyMine, setOnlyMine] = useState(true);
+
+  // Two different questions about the pass. `passStandIds` is "which stands
+  // are mine" — it outlines them on the plan even while the whole predio is
+  // showing, which is the point of walking in with a pass. `scopingPass` is
+  // the stricter "show me only mine", and it can be switched off.
+  const passStandIds = useMemo(() => {
+    if (!pass || passCoversEverything(pass)) return new Set<string>();
+    return new Set(
+      exhibitors
+        .filter((exhibitor) => passMatches(pass, exhibitor.rubro))
+        .map((exhibitor) => exhibitor.id)
+    );
+  }, [pass, exhibitors]);
+
+  const scopingPass =
+    pass && onlyMine && !passCoversEverything(pass) ? pass : null;
 
   const exhibitorsById = useMemo(
     () => new Map(exhibitors.map((e) => [e.id, e])),
@@ -58,10 +79,22 @@ export function VenueMap({
     ? exhibitorsById.get(stands.find((s) => s.id === selectedStandId)?.exhibitorId ?? "")
     : undefined;
 
-  const isVisible = (stand: VenueStand) => matchingExhibitorIds.has(stand.exhibitorId);
+  const isVisible = (stand: VenueStand) =>
+    matchingExhibitorIds.has(stand.exhibitorId) &&
+    (!scopingPass || passStandIds.has(stand.exhibitorId));
+
+  const visibleStandCount = stands.filter(isVisible).length;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+      <PassScopeBar
+        className="lg:col-span-2"
+        noun={{ one: "stand", other: "stands" }}
+        count={visibleStandCount}
+        onlyMine={onlyMine}
+        onOnlyMineChange={setOnlyMine}
+      />
+
       <Card>
         <CardHeader className="flex flex-col gap-4">
           <CardTitle>Plano del predio</CardTitle>
@@ -87,9 +120,11 @@ export function VenueMap({
               </SelectContent>
             </Select>
           </div>
-          {matchingExhibitorIds.size === 0 && (
+          {visibleStandCount === 0 && (
             <p className="text-sm text-muted-foreground" role="status">
-              Ningún expositor coincide con la búsqueda.
+              {matchingExhibitorIds.size === 0
+                ? "Ningún expositor coincide con la búsqueda."
+                : "Ningún stand de tus rubros coincide con la búsqueda. Tocá «Ver todo» para mirar el predio completo."}
             </p>
           )}
         </CardHeader>
@@ -112,11 +147,14 @@ export function VenueMap({
               };
               const isFocused = focusedStandId === stand.id;
               const isSelected = selectedStandId === stand.id;
+              const inPass = passStandIds.has(stand.exhibitorId);
               const strokeColor = isFocused
                 ? "var(--ring)"
                 : isSelected
                   ? "var(--foreground)"
-                  : "transparent";
+                  : inPass
+                    ? "var(--accent)"
+                    : "transparent";
               return (
                 <g
                   key={stand.id}
@@ -128,7 +166,11 @@ export function VenueMap({
                   }
                   tabIndex={visible ? 0 : -1}
                   role="button"
-                  aria-label={exhibitor?.name ?? stand.id}
+                  aria-label={
+                    inPass
+                      ? `${exhibitor?.name ?? stand.id} — stand de tu pase`
+                      : (exhibitor?.name ?? stand.id)
+                  }
                   className="cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   opacity={visible ? 1 : 0.25}
                   pointerEvents={visible ? "auto" : "none"}
@@ -154,7 +196,10 @@ export function VenueMap({
                   >
                     {stand.id}
                   </text>
-                  <title>{exhibitor?.name ?? stand.id}</title>
+                  <title>
+                    {exhibitor?.name ?? stand.id}
+                    {inPass ? " — stand de tu pase" : ""}
+                  </title>
                 </g>
               );
             })}
